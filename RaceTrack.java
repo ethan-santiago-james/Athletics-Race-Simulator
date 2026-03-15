@@ -168,33 +168,38 @@ public class RaceTrack extends JPanel implements Runnable {
    public void paintComponent(Graphics g) {
    
       super.paintComponent(g);
+
+      Graphics2D g2 = (Graphics2D) g;
+      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                          RenderingHints.VALUE_ANTIALIAS_ON);
+      
       
       if(AthleticsRaceSimulator.raceDistance != 100) {
       
-         drawBackground(g);
+         drawBackground(g2);
          
       } else {
 
-         drawBackground2(g);
+         drawBackground2(g2);
       
       }
       
       if(start == true && AthleticsRaceSimulator.raceDistance == 100) {
          
-         startSprintRace(g);
-         drawScoreBoard(g);
+         startSprintRace(g2);
+         drawScoreBoard(g2);
       
       } else if(start == true) {
       
-         startRace(g);
-         drawScoreBoard(g);
+         startRace(g2);
+         drawScoreBoard(g2);
       
       }
       
    
    }
    
-   public void drawScoreBoard(Graphics g) {
+   public void drawScoreBoard(Graphics2D g) {
    
       g.setFont(new Font("TimesRoman",Font.BOLD,25));
       g.setColor(Color.black);
@@ -295,7 +300,7 @@ public class RaceTrack extends JPanel implements Runnable {
    
    }
    
-   public void startSprintRace(Graphics g) {
+   public void startSprintRace(Graphics2D g) {
    
       if(participants.size() <= 8) {
       
@@ -345,7 +350,7 @@ public class RaceTrack extends JPanel implements Runnable {
    
    }
    
-   public void startRace(Graphics g) {
+   public void startRace(Graphics2D g) {
    
       for (int i = 0; i < participants.size(); i++) {
            
@@ -361,7 +366,7 @@ public class RaceTrack extends JPanel implements Runnable {
    }
    
    
-   public void drawParticipantForSprint(Participant p,Graphics g) {
+   public void drawParticipantForSprint(Participant p,Graphics2D g) {
    
       int R = rand.nextInt(1,256);
       int G = rand.nextInt(1,256);
@@ -393,7 +398,7 @@ public class RaceTrack extends JPanel implements Runnable {
       
    }
    
-   public void drawParticipant(Participant p,Graphics g) {
+   public void drawParticipant(Participant p,Graphics2D g) {
    
       int portionOfLap = p.numRotations;
       
@@ -460,7 +465,7 @@ public class RaceTrack extends JPanel implements Runnable {
       
    }
    
-   public void drawBackground(Graphics g) {
+   public void drawBackground(Graphics2D g) {
    
       g.setColor(Color.black);
       g.fillRect(0,0,1000,500);
@@ -519,7 +524,7 @@ public class RaceTrack extends JPanel implements Runnable {
    
    }
    
-   public void drawBackground2(Graphics g) {
+   public void drawBackground2(Graphics2D g) {
    
       g.setColor(Color.black);
       g.fillRect(0,0,1000,500);

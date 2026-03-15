@@ -9,19 +9,17 @@ import java.awt.image.*;
 
 public class MainGUI extends JPanel {
 
-   JLabel title,question;
+   JLabel title,question,createdBy;
    JButton start,instructions,confirm,back;
    JTextField answer;
    JPanel mainScreen,instructionScreen,infoEntryScreen,participantEntryScreen;
-   
+   JTable table;
+
+   Font titleFont = new Font("Segoe UI", Font.BOLD, 36);
+   Font labelFont = new Font("Segoe UI", Font.PLAIN, 16);
+   Font buttonFont = new Font("Segoe UI", Font.BOLD, 18);
+
    BufferedImage backgroundImage;
-   
-   JLabel[] participants = {new JLabel(),new JLabel(),new JLabel(),new JLabel(),new JLabel(),new JLabel(),
-   new JLabel(),new JLabel(),new JLabel(),new JLabel()};
-   static JTextField[] names = {new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5)};
-   static JTextField[] times = {new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5)};
-   static JTextField[] kickScores = {new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5)};
-   static JTextField[] experienceScores = {new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5),new JTextField(5)};
    
    public static int stage = 1;
    public static boolean isOkk = true;
@@ -41,60 +39,113 @@ public class MainGUI extends JPanel {
          e.printStackTrace();
       }
       
-      this.setPreferredSize(new Dimension(1000,800));
+      this.setPreferredSize(new Dimension(1200,675));
       this.setBackground(Color.white);
       
       title = new JLabel("Athletics Race Simulator");
       title.setHorizontalAlignment(SwingConstants.CENTER);
-      title.setPreferredSize(new Dimension(200,225));
+      title.setPreferredSize(new Dimension(800,225));
       question = new JLabel("");
+
+      createdBy = new JLabel("Created By Ethan James");
+      createdBy.setHorizontalAlignment(SwingConstants.CENTER);
+      createdBy.setFont(labelFont);
+      createdBy.setAlignmentX(Component.CENTER_ALIGNMENT);
       
       answer = new JTextField(5);
+      answer.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+      answer.setPreferredSize(new Dimension(200,35));
       
-      start = new JButton("Start");
+      start = createStyledButton("Start", new Color(46, 204, 113));
       start.setBackground(Color.getHSBColor(0.33f,0.45f,0.73f));
-      start.setPreferredSize(new Dimension(200,225));
+      start.setPreferredSize(new Dimension(600,675));
       start.setOpaque(true);
       start.addActionListener(bL);
       
-      instructions = new JButton("Instructions");
+      instructions = createStyledButton("Instructions", new Color(52, 152, 219));
       instructions.setBackground(Color.getHSBColor(0.15f,0.4f,0.95f));
-      instructions.setPreferredSize(new Dimension(200,225));
+      instructions.setPreferredSize(new Dimension(600,675));
       instructions.setOpaque(true);
       instructions.addActionListener(bL);
       
-      back = new JButton("Back");
+      back = createStyledButton("Back", new Color(231, 76, 60));
       back.setBackground(Color.red);
       back.setOpaque(true);
       back.addActionListener(bL);
       
-      confirm = new JButton("Confirm");
+      confirm = confirm = createStyledButton("Confirm", new Color(39, 174, 96));
       confirm.setBackground(Color.green);
       confirm.setOpaque(true);
       confirm.addActionListener(bL);
+
+      title.setFont(titleFont);
+      title.setAlignmentX(Component.CENTER_ALIGNMENT);
+      question.setFont(labelFont);
+
+      start.setFont(buttonFont);
+      start.setAlignmentX(Component.CENTER_ALIGNMENT);
+      instructions.setFont(buttonFont);
+      instructions.setAlignmentX(Component.CENTER_ALIGNMENT);
+      confirm.setFont(buttonFont);
+      back.setFont(buttonFont);
       
       mainScreen = new JPanel();
-      
-      mainScreen.setLayout(new GridLayout(3,1));
+      mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.Y_AXIS));
       
       instructionScreen = new JPanel();
-      instructionScreen.setLayout(new GridLayout(25,1));
-      setUpInstructions();
-      instructionScreen.add(back);
+      instructionScreen.setPreferredSize(new Dimension(800,500));
+      instructionScreen.setLayout(new BorderLayout());
+      
+      JTextArea instructionsText = new JTextArea();
+      instructionsText.setEditable(false);
+      instructionsText.setLineWrap(true);
+      instructionsText.setWrapStyleWord(true);
+      instructionsText.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+      instructionsText.setOpaque(false);
+
+      String instructionContent = setUpInstructions();
+
+      instructionsText.setText(instructionContent);
+
+      JScrollPane instructionScroll = new JScrollPane(instructionsText);
+      instructionScroll.setBorder(null);
+      instructionScroll.getViewport().setOpaque(false);
+      instructionScroll.setOpaque(false);
+
+      instructionScreen.add(instructionScroll, BorderLayout.CENTER);
+      instructionScreen.add(back, BorderLayout.SOUTH);
       
       infoEntryScreen = new JPanel();
-      infoEntryScreen.setLayout(new GridLayout(3,1));
-      infoEntryScreen.add(question);
-      infoEntryScreen.add(answer);
-      infoEntryScreen.add(confirm);
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(10,10,10,10);
+
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      infoEntryScreen.add(question, gbc);
+
+      gbc.gridy = 1;
+      infoEntryScreen.add(answer, gbc);
+
+      gbc.gridy = 2;
+      infoEntryScreen.add(confirm, gbc);
       
       participantEntryScreen = new JPanel();
       participantEntryScreen.setLayout(new GridLayout(12,5));
+
       
       add(mainScreen);
       mainScreen.add(title);
+      mainScreen.add(Box.createVerticalStrut(40));
       mainScreen.add(start);
+      mainScreen.add(Box.createVerticalStrut(20));
       mainScreen.add(instructions);
+      mainScreen.add(Box.createVerticalStrut(40));
+      mainScreen.add(createdBy);
+
+      mainScreen.setBorder(BorderFactory.createEmptyBorder(40,40,40,40));
+      instructionScreen.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
+      infoEntryScreen.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
+      participantEntryScreen.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
       
       add(instructionScreen);
       add(infoEntryScreen);
@@ -106,6 +157,18 @@ public class MainGUI extends JPanel {
       manageStages();
       
    
+   }
+
+   private JButton createStyledButton(String text, Color color) {
+
+      JButton btn = new JButton(text);
+      btn.setFocusPainted(false);
+      btn.setBackground(color);
+      btn.setForeground(Color.WHITE);
+      btn.setFont(new Font("Segoe UI", Font.BOLD, 18));
+      btn.setBorder(BorderFactory.createEmptyBorder(15,30,15,30));
+
+      return btn;
    }
    
    @Override
@@ -119,90 +182,29 @@ public class MainGUI extends JPanel {
             
    }
    
-   public void setUpInstructions() {
+   public String setUpInstructions() {
    
+      StringBuilder text = new StringBuilder();
+
       try {
       
          Scanner instructionScanner = new Scanner(new File("instructions"));
          
          while(instructionScanner.hasNextLine()) {
          
-            String currLine = instructionScanner.nextLine();
-            JLabel instruction = new JLabel(currLine);
-            instructionScreen.add(instruction);
+            text.append(instructionScanner.nextLine()).append("\n\n");
          
          }
+
+         return text.toString();
          
-      } catch(FileNotFoundException fnfe) {}
-   
-   }
-   
-   public void setUpParticipantScreen() {
-   
-      if(numParticipants >= 10) {
-      
-         for (int i = 0; i < 10; i++) {
-         
-            (participants[i]).setText("Participant " + currParticipant);
-            participantEntryScreen.add(participants[i]);
-            participantEntryScreen.add(names[i]);
-            participantEntryScreen.add(times[i]);
-            participantEntryScreen.add(kickScores[i]);
-            
-            if(AthleticsRaceSimulator.raceDistance != 100) {
-            
-               participantEntryScreen.add(experienceScores[i]);
-               
-            } else {
-            
-               participantEntryScreen.add(new JLabel(" "));
-            
-            }
-            
-            currParticipant++;
-         
-         }
-         
-         
-      } else {
-      
-         for (int i = 0; i < numParticipants; i++) {
-         
-            (participants[i]).setText("Participant " + currParticipant);
-            participantEntryScreen.add(participants[i]);
-            participantEntryScreen.add(names[i]);
-            participantEntryScreen.add(times[i]);
-            participantEntryScreen.add(kickScores[i]);
-            
-            
-            if(AthleticsRaceSimulator.raceDistance != 100) {
-            
-               participantEntryScreen.add(experienceScores[i]);
-               
-            } else {
-            
-               participantEntryScreen.add(new JLabel(" "));
-            
-            }
-            
-            currParticipant++;
-         
-         }
-         
-         for (int j = numParticipants; j < 10; j++) {
-         
-            participantEntryScreen.add(new JLabel(""));
-            participantEntryScreen.add(new JLabel(""));
-            participantEntryScreen.add(new JLabel(""));
-            participantEntryScreen.add(new JLabel(""));
-            participantEntryScreen.add(new JLabel(""));
-         
-         }
-         
-      
+      } catch(FileNotFoundException fnfe) {
+
+         return "";
       }
    
    }
+   
    
    public void manageStages() {
    
@@ -246,32 +248,18 @@ public class MainGUI extends JPanel {
           
             infoEntryScreen.setVisible(false);
             participantEntryScreen.setVisible(true);
-            
+
             participantEntryScreen.removeAll();
-            participantEntryScreen.repaint();
+
+            JScrollPane scroll = new JScrollPane(table);
+            participantEntryScreen.setLayout(new BorderLayout());
+
+            participantEntryScreen.add(scroll, BorderLayout.CENTER);
+            participantEntryScreen.add(confirm, BorderLayout.SOUTH);
+
             participantEntryScreen.revalidate();
-            
-            if(AthleticsRaceSimulator.raceDistance != 100) {
-            
-               participantEntryScreen.add(new JLabel("INFO"));
-               participantEntryScreen.add(new JLabel("Name"));
-               participantEntryScreen.add(new JLabel("Time"));
-               participantEntryScreen.add(new JLabel("Kick Rating (1-10)"));
-               participantEntryScreen.add(new JLabel("Experience Rating (1-10)"));
-               
-            } else {
-            
-               participantEntryScreen.add(new JLabel("INFO"));
-               participantEntryScreen.add(new JLabel("Name"));
-               participantEntryScreen.add(new JLabel("Time"));
-               participantEntryScreen.add(new JLabel("Start Rating (1-10)"));
-               participantEntryScreen.add(new JLabel(""));
-            
-            }
-            
-            setUpParticipantScreen();
-            
-            participantEntryScreen.add(confirm);
+            participantEntryScreen.repaint();
+
             break;
           
             
@@ -330,6 +318,14 @@ public class MainGUI extends JPanel {
                         
                         if(numParticipants > 0) {
                         
+                                                
+                           String[] columns = {"Name", "Time", "Kick", "Experience"};
+                           Object[][] data = new Object[numParticipants][4];
+
+                           table = new JTable(data, columns);
+                           JScrollPane tableScroll = new JScrollPane(table);
+
+                           participantEntryScreen.add(tableScroll);
                            subStage++;
                            
                         } else {
@@ -409,19 +405,18 @@ public class MainGUI extends JPanel {
       
                                  for (int i = 0; i < numParticipants; i++) {
                                  
-                                    AthleticsRaceSimulator.participantNames.add(names[i].getText());
-                                    names[i].setText("");
-                                    AthleticsRaceSimulator.participantTimes.add(times[i].getText());
-                                    times[i].setText("");
-                                    
-                                    AthleticsRaceSimulator.participantKickScores.add(Integer.valueOf(kickScores[i].getText()));
-                                    kickScores[i].setText("");
-                                    
-                                    if(AthleticsRaceSimulator.raceDistance != 100) {
-                                    
-                                       AthleticsRaceSimulator.participantExperience.add(Integer.valueOf(experienceScores[i].getText()));
-                                       experienceScores[i].setText("");
-                                       
+                                    String name = String.valueOf(table.getValueAt(i,0));
+                                    String time = String.valueOf(table.getValueAt(i,1));
+
+                                    int kick = Integer.parseInt(String.valueOf(table.getValueAt(i,2)));
+
+                                    AthleticsRaceSimulator.participantNames.add(name);
+                                    AthleticsRaceSimulator.participantTimes.add(time);
+                                    AthleticsRaceSimulator.participantKickScores.add(kick);
+
+                                    if(AthleticsRaceSimulator.raceDistance != 100){
+                                       int exp = Integer.parseInt(String.valueOf(table.getValueAt(i,3)));
+                                       AthleticsRaceSimulator.participantExperience.add(exp);
                                     }
                                     
                                     
@@ -432,17 +427,17 @@ public class MainGUI extends JPanel {
                            
                                  for (int i = 0; i < 10; i++) {
                                  
-                                    AthleticsRaceSimulator.participantNames.add(names[i].getText());
-                                    names[i].setText("");
-                                    AthleticsRaceSimulator.participantTimes.add(times[i].getText());
-                                    times[i].setText("");
+                                    AthleticsRaceSimulator.participantNames.add(String.valueOf(table.getValueAt(i,0)));
                                     
-                                    AthleticsRaceSimulator.participantKickScores.add(Integer.valueOf(kickScores[i].getText()));
-                                    kickScores[i].setText("");
+                                    AthleticsRaceSimulator.participantTimes.add(String.valueOf(table.getValueAt(i,1)));
+                                    
+                                    
+                                    AthleticsRaceSimulator.participantKickScores.add(Integer.valueOf(String.valueOf(table.getValueAt(i,2))));
+                                    
                                     if(AthleticsRaceSimulator.raceDistance != 100) {
                                     
-                                       AthleticsRaceSimulator.participantExperience.add(Integer.valueOf(experienceScores[i].getText()));
-                                       experienceScores[i].setText("");
+                                       AthleticsRaceSimulator.participantExperience.add(Integer.valueOf(String.valueOf(table.getValueAt(i,3))));
+                                       
                                        
                                     }
                                     
@@ -581,184 +576,62 @@ public class MainGUI extends JPanel {
    }
    
    public boolean checkInputs() {
-   
-      boolean isOk = true;
-      
-      if(numParticipants >= 10) {
-       
-         for (int i = 0; i < names.length; i++) {
-         
-            if(AthleticsRaceSimulator.raceDistance != 100) {
-            
-               try {
-                  
-                  boolean validTime = checkTime(times[i].getText());
-                  int experienceScore = Integer.valueOf(experienceScores[i].getText());
-                  int kickScore = Integer.valueOf(kickScores[i].getText());
-                  
-                  if(validTime == false) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the times entered is invalid\nRemember time format is in HH:MM:SS.XX");
-                     isOk = false;
-                     
-                  }
-                  
-                  if(experienceScore < 1 || kickScore < 1 || experienceScore > 10 || kickScore > 10) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the experience or kick scores is out of range!");
-                     isOk = false;
-                  
-                  }
-               
-               }  catch(NoSuchElementException e) {
-               
-                  JOptionPane.showMessageDialog(null,"Please fill out all fields!");
-                  isOk = false;
-               
-               } catch(NumberFormatException n) {
-               
-                  JOptionPane.showMessageDialog(null,"Experiences and kick scores must be integers!");
-                  isOk = false;
-                  
-               }
-               
-            } else {
-            
-               try {
-               
-                  boolean validTime = checkTime(times[i].getText());
-                  int startScore = Integer.valueOf(kickScores[i].getText());
-                  
-                  
-                  if(validTime == false) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the times entered is invalid\nRemember time format is in SS.XX");
-                     isOk = false;
-                     
-                  }
-                  
-                  if(startScore < 1 || startScore > 10) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the start scores is out of range!");
-                     isOk = false;
-                  
-                  }
-               
-               } catch(NoSuchElementException e) {
-               
-                  JOptionPane.showMessageDialog(null,"Please fill out all fields!");
-                  isOk = false;
-               
-               } catch(NumberFormatException n) {
-               
-                  JOptionPane.showMessageDialog(null,"Start scores must be integers!");
-                  isOk = false;
-                  
-               }
-            
-            }
-            
-            if(isOk == false) {
-            
-               break;
-               
-            }
-            
-            
-            
-         
-         }
-         
-      } else {
-      
-         for (int i = 0; i < numParticipants; i++) {
-         
-            if(AthleticsRaceSimulator.raceDistance != 100) {
-            
-               try {
-               
-                  int experienceScore = Integer.valueOf(experienceScores[i].getText());
-                  int kickScore = Integer.valueOf(kickScores[i].getText());
-                  
-                  boolean validTime = checkTime(times[i].getText());
-                  if(validTime == false) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the times entered is invalid!\nRemember time format is in HH:MM:SS.XX");
-                     isOk = false;
-                     
-                  }
-                  
-                  if(experienceScore < 1 || kickScore < 1 || experienceScore > 10 || kickScore > 10) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the experience or kick scores is out of range!");
-                     isOk = false;
-                  
-                  }
-               
-               } catch(NoSuchElementException e) {
-               
-                  JOptionPane.showMessageDialog(null,"Please fill out all fields!");
-                  isOk = false;
-               
-               } catch(NumberFormatException n) {
-               
-                  JOptionPane.showMessageDialog(null,"Experience and kick scores must be integers!");
-                  isOk = false;
-                  
-               }
-               
-            } else {
-            
-               try {
-               
-                  int startScore = Integer.valueOf(kickScores[i].getText());
-                  
-                  boolean validTime = checkTime(times[i].getText());
-                  
-                  if(validTime == false) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the times entered is invalid\nRemember time format is in SS.XX");
-                     isOk = false;
-                     
-                  }
-                  
-                  if(startScore < 1 || startScore > 10) {
-                  
-                     JOptionPane.showMessageDialog(null,"One of the start scores is out of range!");
-                     isOk = false;
-                  
-                  }
-               
-               } catch(NoSuchElementException e) {
-               
-                  JOptionPane.showMessageDialog(null,"Please fill out all fields!");
-                  isOk = false;
-               
-               } catch(NumberFormatException n) {
-               
-                  JOptionPane.showMessageDialog(null,"Start scores must be integers!");
-                  isOk = false;
-                  
-               }
-            
-            }
-            
-            if(isOk == false) {
-            
-               break;
-               
-            }
-            
-            
-            
-         
+
+      for(int i = 0; i < numParticipants; i++) {
+
+         Object nameObj = table.getValueAt(i,0);
+         Object timeObj = table.getValueAt(i,1);
+         Object kickObj = table.getValueAt(i,2);
+
+         if(nameObj == null || timeObj == null || kickObj == null) {
+            JOptionPane.showMessageDialog(null,"Please fill out all fields!");
+            return false;
          }
 
-      
+         String time = timeObj.toString();
+
+         if(!checkTime(time)) {
+            JOptionPane.showMessageDialog(null,"Invalid time format!");
+            return false;
+         }
+
+         try {
+
+            int kick = Integer.parseInt(kickObj.toString());
+
+            if(kick < 1 || kick > 10){
+               JOptionPane.showMessageDialog(null,"Kick score must be 1-10");
+               return false;
+            }
+
+            if(AthleticsRaceSimulator.raceDistance != 100){
+
+               Object expObj = table.getValueAt(i,3);
+
+               if(expObj == null){
+                  JOptionPane.showMessageDialog(null,"Please fill experience score!");
+                  return false;
+               }
+
+               int exp = Integer.parseInt(expObj.toString());
+
+               if(exp < 1 || exp > 10){
+                  JOptionPane.showMessageDialog(null,"Experience score must be 1-10");
+                  return false;
+               }
+
+            }
+
+         } catch(NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(null,"Scores must be integers!");
+            return false;
+
+         }
+
       }
-      
-      return isOk;
-   
+
+      return true;
    }
 
 }

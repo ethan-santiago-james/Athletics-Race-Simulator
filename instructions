@@ -1,16 +1,59 @@
-                             INSTRUCTIONS
-                  
-1. Answer the questions for race distance, and number of participants
-2. Answer how much you would like the simulation to be sped up
-3. You will come across these metrics when entering participant information
-Start Score: A rating of how good a participants sprint start is from 1 to 10
-- You'll only see this when a distance of 100 is entered
-- Participants with a higher start score will accelerate faster
-Kick Score: A rating of how good a participants finishing speed is from 1 to 10
-- Participants with a higher kick score will finish faster
-Experience Score: A rating of how much experience the participant has in the particular event
-- Rated from 1 to 10
-- Participants with a low experience score will start too fast, and deccelerate
-- Participants with a high experience score will run the race evenly
-Other Rules:
-- All times must be to the nearest two milliseconds (i.e 5:30.00)
+INSTRUCTIONS
+
+Welcome to the Athletics Race Simulator. This program allows you to simulate a race between multiple participants using performance metrics that influence how each athlete runs the race.
+
+SETUP PROCESS
+
+Enter the race distance in metres when prompted.
+
+Enter the number of participants who will compete in the race.
+
+Enter how much you would like the race simulation to be sped up (for example, entering 5 will run the simulation at 5× normal speed).
+
+After these values are entered, you will be asked to provide information for each participant.
+
+PARTICIPANT METRICS
+
+Each participant requires a name, a personal best time, and one or more performance ratings depending on the race distance.
+
+Start Score (100m races only)
+
+A rating from 1 to 10 that represents how strong the participant’s sprint start is.
+
+Athletes with a higher start score accelerate more quickly out of the blocks.
+
+This metric only appears when the race distance is 100 metres.
+
+Kick Score
+
+A rating from 1 to 10 that represents how strong the participant’s finishing sprint is.
+
+Athletes with higher kick scores will accelerate more during the final portion of the race.
+
+Experience Score
+
+A rating from 1 to 10 representing the participant’s experience in the event.
+
+Participants with low experience scores are more likely to start the race too quickly and slow down later.
+
+Participants with high experience scores tend to pace themselves more evenly throughout the race.
+
+TIME FORMAT
+
+All participant times must follow a specific format and must be recorded to two decimal places.
+
+Examples:
+
+Middle or long distance: 5:30.00 (minutes.milliseconds)
+
+Sprint events: 10.25 (seconds.milliseconds)
+
+GENERAL RULES
+
+All scores must be integers between 1 and 10.
+
+Times must always include two decimal places.
+
+Every participant must have all required fields completed before the race can begin.
+
+Once all participants have been entered successfully, the race simulation will begin.
